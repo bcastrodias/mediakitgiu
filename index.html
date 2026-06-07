@@ -13,7 +13,7 @@
   @font-face{ font-family:'Space Grotesk'; font-weight:700;
     src:url('_fonts/SpaceGrotesk-Bold.ttf') format('truetype'); font-display:swap; }
 
-  /* header de navegaÃ§Ã£o: aparece ao rolar e leva (suave) a cada seÃ§Ã£o */
+  /* header de navegação: aparece ao rolar e leva (suave) a cada seção */
   [id^="sec-"]{ scroll-margin-top:74px; }
   .nav{
     position:fixed; top:0; left:0; right:0; z-index:100;
@@ -32,21 +32,21 @@
     transition:color .15s; }
   .nav-links a:hover{ color:#fff; }
 
-  /* Cada slide Ã© a imagem original 1920x1080 exibida na largura natural.
-     width:100% + height:auto => proporÃ§Ã£o preservada, sem zoom, corte ou inclinaÃ§Ã£o. */
+  /* Cada slide é a imagem original 1920x1080 exibida na largura natural.
+     width:100% + height:auto => proporção preservada, sem zoom, corte ou inclinação. */
   .kit{ width:100%; }
   .kit img{ display:block; width:100%; height:auto; }
 
-  /* fade suave ao rolar (sÃ³ estÃ©tica; nÃ£o toca nas imagens) */
+  /* fade suave ao rolar (só estética; não toca nas imagens) */
   @media (prefers-reduced-motion:no-preference){
     .kit img{ opacity:0; transform:translateY(24px);
       transition:opacity .6s ease-out, transform .6s cubic-bezier(.2,.7,.2,1); }
     .kit img.in-view{ opacity:1; transform:none; }
   }
 
-  /* ---------- contadores sobrepostos APENAS nos nÃºmeros (slide de mÃ©tricas) ----------
-     A imagem do slide fica intacta. Cada nÃºmero animado Ã© uma camada por cima,
-     com fundo branco igual ao card, cobrindo o nÃºmero "chapado" e contando de 0 ao valor. */
+  /* ---------- contadores sobrepostos APENAS nos números (slide de métricas) ----------
+     A imagem do slide fica intacta. Cada número animado é uma camada por cima,
+     com fundo branco igual ao card, cobrindo o número "chapado" e contando de 0 ao valor. */
   .slide{ position:relative; container-type:inline-size; }
   .num{
     position:absolute; transform:translate(-50%,-50%);
@@ -57,12 +57,12 @@
     display:inline-flex; align-items:center; justify-content:center;
   }
   .num .pct{ color:#E60FA8; }
-  /* sem fundo: usado onde o nÃºmero chapado jÃ¡ foi apagado da imagem */
+  /* sem fundo: usado onde o número chapado já foi apagado da imagem */
   .num.bare{ background:transparent; }
-  /* alinhado Ã  direita: ancorado pela borda direita (nÃºmeros em coluna) */
+  /* alinhado Ã  direita: ancorado pela borda direita (números em coluna) */
   .num.rt{ transform:translate(-100%,-50%); justify-content:flex-end; text-align:right; }
 
-  /* barras horizontais (faixas etÃ¡rias / gÃªnero): trilho cobre a barra do slide,
+  /* barras horizontais (faixas etárias / gÃªnero): trilho cobre a barra do slide,
      preenchimento cresce de 0 ao valor. */
   .track{
     position:absolute; transform:translateY(-50%);
@@ -73,7 +73,7 @@
   .track > i{ display:block; height:100%; width:0; background:var(--fill,#D300C5);
     border-radius:999px; transition:width 1.2s cubic-bezier(.2,.7,.2,1); }
 
-  /* barras verticais (grÃ¡fico de crescimento): cobre a barra com o lime do grÃ¡fico
+  /* barras verticais (gráfico de crescimento): cobre a barra com o lime do gráfico
      e cresce o rosa de baixo pra cima. */
   .vbar{
     position:absolute; transform:translateX(-50%);
@@ -84,7 +84,7 @@
   .vbar > i{ display:block; width:100%; height:0; background:#F67EDC;
     transition:height 1.1s cubic-bezier(.2,.7,.2,1); }
 
-  /* indicador de scroll: seta curvada que balanÃ§a e some ao rolar */
+  /* indicador de scroll: seta curvada que balança e some ao rolar */
   .scroll-cue{
     position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
     width:64px; height:64px; border-radius:999px;
@@ -99,13 +99,13 @@
 </style>
 </head>
 <body>
-<!-- header de navegaÃ§Ã£o (aparece ao rolar) -->
+<!-- header de navegação (aparece ao rolar) -->
 <header class="nav" id="nav">
   <span class="nav-brand">GIU MIRANDA</span>
   <nav class="nav-links">
     <a href="#sec-sobre">Sobre</a>
-    <a href="#sec-metricas">MÃ©tricas</a>
-    <a href="#sec-conteudo">ConteÃºdo</a>
+    <a href="#sec-metricas">Métricas</a>
+    <a href="#sec-conteudo">Conteúdo</a>
     <a href="#sec-tv">TV</a>
     <a href="#sec-contato">Contato</a>
   </nav>
@@ -122,26 +122,26 @@
   <img src="slides/01-capa.png?v=9"        alt="Capa â€” Giu Miranda">
   <img src="slides/02-sobre.png?v=9"        alt="Sobre â€” Oie! Prazer, Giu" id="sec-sobre" loading="lazy">
 
-  <!-- MÃ‰TRICAS: slide original + contadores sobrepostos sÃ³ nos nÃºmeros -->
+  <!-- MÉTRICAS: slide original + contadores sobrepostos só nos números -->
   <div class="slide" data-counts id="sec-metricas">
-    <img src="slides/03-metricas.png?v=9"   alt="Minhas mÃ©tricas" loading="lazy">
+    <img src="slides/03-metricas.png?v=9"   alt="Minhas métricas" loading="lazy">
     <span class="num bare" style="--l:52.7;--t:17.8;--fs:1.35;--mw:4.6;"><span data-count="637"></span></span>
     <span class="num bare" style="--l:61.2;--t:17.8;--fs:1.35;--mw:7.4;"><span data-count="62.4" data-decimals="1" data-suffix=" mil"></span></span>
     <span class="num bare" style="--l:69.6;--t:17.8;--fs:1.35;--mw:5.9;"><span data-count="5197"></span></span>
     <span class="num bare" style="--l:46.35;--t:86.2;--fs:1.2;--mw:5.6;"><span data-count="94.87" data-decimals="2"></span><span class="pct">%</span></span>
     <span class="num bare" style="--l:57.7;--t:86.2;--fs:1.2;--mw:5.4;"><span data-count="34.7" data-decimals="1" data-suffix="K"></span></span>
 
-    <!-- grÃ¡fico: Principais faixas etÃ¡rias (4 barras horizontais) -->
+    <!-- gráfico: Principais faixas etárias (4 barras horizontais) -->
     <div class="track" style="--l:41.25;--t:55.56;--w:6.72;--h:0.72;"><i data-bar="100"></i></div>
     <div class="track" style="--l:41.25;--t:59.63;--w:6.72;--h:0.72;"><i data-bar="94.4"></i></div>
     <div class="track" style="--l:41.25;--t:63.61;--w:6.72;--h:0.72;"><i data-bar="17.5"></i></div>
     <div class="track" style="--l:41.25;--t:67.59;--w:6.72;--h:0.72;"><i data-bar="8"></i></div>
 
-    <!-- grÃ¡fico: GÃªnero (Homens / Mulheres) -->
+    <!-- gráfico: Gênero (Homens / Mulheres) -->
     <div class="track" style="--l:79.48;--t:34.91;--w:5.8;--h:0.46;--bg:#F3F5F7;"><i data-bar="100" style="--fill:#D300C5;"></i></div>
     <div class="track" style="--l:79.48;--t:39.35;--w:5.8;--h:0.46;--bg:#F3F5F7;"><i data-bar="100" style="--fill:#5806E0;"></i></div>
 
-    <!-- grÃ¡fico: barras crescentes (8 barras verticais) -->
+    <!-- gráfico: barras crescentes (8 barras verticais) -->
     <span class="vbar" style="--l:81.35;--w:0.83;--h:1.09;"><i></i></span>
     <span class="vbar" style="--l:82.81;--w:0.83;--h:1.67;"><i></i></span>
     <span class="vbar" style="--l:84.27;--w:0.83;--h:0.73;"><i></i></span>
@@ -156,17 +156,17 @@
   <!-- SEGUIDORES: slide original + contadores e barras sobrepostos -->
   <div class="slide" data-counts>
     <img src="slides/05-seguidores.png?v=8"   alt="Um pouco mais sobre meus seguidores" loading="lazy">
-    <!-- insights numÃ©ricos (nÃºmeros/setas chapados apagados; camadas sem fundo, alinhadas Ã  direita) -->
+    <!-- insights numéricos (números/setas chapados apagados; camadas sem fundo, alinhadas Ã  direita) -->
     <span class="num bare rt" style="--l:41.15;--t:76.67;--fs:1.15;--mw:0;"><span data-count="10.1" data-decimals="1" data-suffix=" mi"></span></span>
     <span class="num bare rt" style="--l:41.15;--t:81.36;--fs:1.15;--mw:0;"><span data-count="1.5" data-decimals="1" data-suffix=" mi"></span></span>
     <span class="num bare rt" style="--l:41.15;--t:86.11;--fs:1.15;--mw:0;"><span data-count="4139" data-plain="1"></span></span>
     <span class="num bare rt" style="--l:41.15;--t:90.86;--fs:1.15;--mw:0;"><span data-count="44" data-plain="1"></span></span>
-    <!-- grÃ¡fico: Por tipo de conteÃºdo (Reels / Stories / Posts) -->
+    <!-- gráfico: Por tipo de conteúdo (Reels / Stories / Posts) -->
     <div class="track" style="--l:5.0;--t:55.93;--w:6.41;--h:0.6;"><i data-bar="100"></i></div>
     <div class="track" style="--l:4.95;--t:61.02;--w:6.20;--h:0.6;"><i data-bar="100"></i></div>
     <div class="track" style="--l:4.95;--t:66.20;--w:3.75;--h:0.6;"><i data-bar="100"></i></div>
   </div>
-  <img src="slides/06-conteudos.png?v=2"    alt="Alguns conteÃºdos que jÃ¡ fiz" id="sec-conteudo" loading="lazy">
+  <img src="slides/06-conteudos.png?v=2"    alt="Alguns conteúdos que já fiz" id="sec-conteudo" loading="lazy">
   <img src="slides/07-diferenciais.png?v=7" alt="Diferenciais" loading="lazy">
   <img src="slides/08-cinema.png?v=7"       alt="Eu na TV e no cinema" id="sec-tv" loading="lazy">
   <img src="slides/11-contato.png?v=21"      alt="Bora criar junt@s?" id="sec-contato" loading="lazy">
@@ -174,7 +174,7 @@
 
 <script>
 (function(){
-  /* header de navegaÃ§Ã£o: aparece depois de sair da capa */
+  /* header de navegação: aparece depois de sair da capa */
   var nav = document.getElementById('nav');
   if(nav){
     window.addEventListener('scroll', function(){
@@ -204,7 +204,7 @@
     imgs.forEach(function(i){ i.classList.add('in-view'); });
   }
 
-  /* contadores: anima de 0 atÃ© o valor quando o slide entra na tela */
+  /* contadores: anima de 0 até o valor quando o slide entra na tela */
   function fmt(n, dec, plain){
     if(plain) return String(Math.round(n));
     return n.toLocaleString('pt-BR', {minimumFractionDigits:dec, maximumFractionDigits:dec});
@@ -225,7 +225,7 @@
     }
     requestAnimationFrame(step);
   }
-  // mostra o valor final de imediato (evita "0" piscando se nÃ£o houver animaÃ§Ã£o)
+  // mostra o valor final de imediato (evita "0" piscando se não houver animação)
   document.querySelectorAll('[data-count]').forEach(function(el){
     el.textContent = fmt(parseFloat(el.dataset.count), parseInt(el.dataset.decimals||'0',10), !!el.dataset.plain) + (el.dataset.suffix||'');
   });
