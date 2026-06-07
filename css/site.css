@@ -1,0 +1,182 @@
+/* ===========================================================
+   Mídia Kit — Giu Miranda
+   Built on MarketMeaning neubrutalist tokens + Giu's palette
+   =========================================================== */
+
+:root{
+  /* Giu palette (sampled from source slides) */
+  --giu-blue:   #3A33E8;
+  --giu-blue-2: #4B45F0;
+  --giu-lime:   #C6FF3D;
+  --giu-purple: #A98BE5;
+  --giu-pink:   #F18FD2;   /* soft pill pink */
+  --giu-pink-2: #FF4D8D;   /* hot accent */
+  --giu-ice:    #C8F2F7;   /* pale cyan */
+  --giu-teal:   #1BA6B2;
+  --giu-mustard:#E8A62A;
+  --giu-ink:    #141414;
+  --giu-paper:  #FFFFFF;
+
+  --hard-sm: 4px 4px 0 0 var(--giu-ink);
+  --hard-md: 7px 7px 0 0 var(--giu-ink);
+  --hard-lg: 11px 11px 0 0 var(--giu-ink);
+}
+
+*{ box-sizing:border-box; }
+
+html,body{ margin:0; padding:0; background:#0c0c0c; }
+
+/* fonts: Archivo Black (display) + Space Grotesk (ui) + Anton-like already covered */
+.giu-display{
+  font-family:'Archivo Black','Space Grotesk',system-ui,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:-0.02em;
+  line-height:0.92;
+}
+.giu-sans{ font-family:'Space Grotesk',system-ui,sans-serif; }
+
+/* ---- slide canvas ---- */
+section{ font-family:'Space Grotesk',system-ui,sans-serif; color:var(--giu-ink); }
+.cv{ position:absolute; inset:0; overflow:hidden; }
+
+/* split background halves */
+.half-l,.half-r{ position:absolute; top:0; bottom:0; }
+
+/* generic photo frame */
+.photo{
+  position:absolute; background-size:cover; background-position:center;
+  background-repeat:no-repeat;
+}
+.bd{ border:4px solid var(--giu-ink); }
+
+/* pills */
+.pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--giu-pink); color:#fff; font-weight:700;
+  border-radius:999px; line-height:1; text-align:center;
+}
+
+/* ---- big repeated headline (cover) ---- */
+.repeat-name{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  justify-content:center; gap:0.02em; padding:0 36px;
+  font-family:'Archivo Black',sans-serif; color:var(--giu-lime);
+  text-transform:uppercase; letter-spacing:-0.03em; line-height:0.84;
+  user-select:none; pointer-events:none;
+}
+.repeat-name span{ white-space:nowrap; }
+
+/* arrow circle button */
+.arrow-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--giu-blue); border-radius:999px; color:#fff;
+}
+
+/* entrance animations (only when active + motion ok) */
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .anim{ animation:rise .55s cubic-bezier(.2,.7,.2,1) both; }
+  [data-deck-active] .anim-2{ animation:rise .55s .08s cubic-bezier(.2,.7,.2,1) both; }
+  [data-deck-active] .anim-3{ animation:rise .55s .16s cubic-bezier(.2,.7,.2,1) both; }
+  [data-deck-active] .anim-4{ animation:rise .55s .24s cubic-bezier(.2,.7,.2,1) both; }
+  [data-deck-active] .pop{ animation:pop .5s .1s cubic-bezier(.2,1.3,.4,1) both; }
+}
+@keyframes rise{ from{ opacity:0; transform:translateY(26px); } to{ opacity:1; transform:translateY(0);} }
+@keyframes pop{ from{ opacity:0; transform:scale(.86);} to{ opacity:1; transform:scale(1);} }
+
+/* dashboard cards (rebuilt UI) */
+.ui-card{
+  background:#fff; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,.10);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+}
+.bar-track{ background:# EAEAEA; height:9px; border-radius:999px; overflow:hidden; }
+.bar-track{ background:#EAEAEA; }
+.bar-fill{ height:100%; border-radius:999px; background:#E60FA8; width:0; transition:width 1.1s cubic-bezier(.2,.7,.2,1); }
+
+/* hover lift for clickable cards */
+.lift{ transition:transform .14s ease-out, box-shadow .14s ease-out; cursor:pointer; }
+.lift:hover{ transform:translate(-3px,-3px); }
+
+/* ===== fixed UI: language toggle + contact ===== */
+.fixed-ui{ position:fixed; z-index:9999; font-family:'Space Grotesk',system-ui,sans-serif; }
+.lang-toggle{
+  top:16px; right:16px; display:flex; gap:0; border:3px solid var(--giu-ink);
+  border-radius:999px; overflow:hidden; background:#fff; box-shadow:var(--hard-sm);
+}
+.lang-toggle button{
+  border:0; background:transparent; padding:7px 14px; font-weight:800;
+  font-family:'Space Grotesk',sans-serif; cursor:pointer; font-size:13px;
+  letter-spacing:.02em; color:var(--giu-ink);
+}
+.lang-toggle button.on{ background:var(--giu-blue); color:#fff; }
+
+.contact-fab{
+  bottom:20px; right:20px; display:flex; align-items:center; gap:10px;
+  background:#25D366; color:#fff; border:3px solid var(--giu-ink);
+  border-radius:999px; padding:13px 20px 13px 16px; font-weight:800;
+  text-decoration:none; box-shadow:var(--hard-md); font-size:15px;
+  transition:transform .14s ease-out, box-shadow .14s ease-out;
+}
+.contact-fab:hover{ transform:translate(-2px,-2px); box-shadow:var(--hard-lg); }
+.contact-fab svg{ width:22px; height:22px; flex:none; }
+
+/* swap-photos mode */
+.swap-toggle{ top:16px; right:150px; }
+.swap-toggle button{
+  border:3px solid var(--giu-ink); background:#fff; border-radius:999px;
+  padding:7px 14px; font-weight:800; cursor:pointer; font-size:13px;
+  box-shadow:var(--hard-sm); display:flex; align-items:center; gap:7px;
+}
+.swap-toggle button.on{ background:var(--giu-lime); }
+body.swap-on [data-swap]{ cursor:pointer; outline:3px dashed var(--giu-pink-2); outline-offset:-3px; }
+body.swap-on [data-swap]::after{
+  content:'↻ trocar'; position:absolute; top:8px; left:8px; z-index:5;
+  background:var(--giu-pink-2); color:#fff; font-family:'Space Grotesk',sans-serif;
+  font-weight:800; font-size:13px; padding:5px 10px; border-radius:999px;
+  border:2px solid var(--giu-ink); pointer-events:none;
+}
+
+/* brand modal */
+.modal-back{
+  position:fixed; inset:0; z-index:10000; background:rgba(10,10,10,.72);
+  display:none; align-items:center; justify-content:center; padding:32px;
+  font-family:'Space Grotesk',sans-serif;
+}
+.modal-back.show{ display:flex; }
+.modal{
+  background:var(--giu-ice); border:5px solid var(--giu-ink); box-shadow:14px 14px 0 0 #000;
+  max-width:560px; width:100%; border-radius:8px; overflow:hidden; position:relative;
+  animation:pop .35s cubic-bezier(.2,1.3,.4,1) both;
+}
+.modal-img{ width:100%; height:330px; background-size:cover; background-position:center top; border-bottom:5px solid var(--giu-ink); }
+.modal-body{ padding:22px 26px 28px; }
+.modal .x{
+  position:absolute; top:12px; right:12px; width:40px; height:40px; border-radius:999px;
+  border:3px solid var(--giu-ink); background:#fff; font-weight:900; font-size:20px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:3;
+}
+
+/* ===========================================================
+   Scroll-site layout (antes era um deck de slides)
+   Cada <section> é um canvas 1920x1080 escalado para a largura
+   disponível e empilhado verticalmente — o site rola a página.
+   =========================================================== */
+html,body{ background:#0c0c0c; }
+.site{
+  display:block; max-width:1920px; margin:0 auto;
+  background:#fff; overflow:hidden;
+}
+.site > section{
+  position:relative; width:100%; overflow:hidden;
+}
+.site > section > .cv{
+  position:absolute; inset:auto; top:0; left:0;
+  width:1920px; height:1080px;
+  transform-origin:top left;
+}
+
+/* revela cada seção ao rolar para dentro da tela */
+@media (prefers-reduced-motion:no-preference){
+  .site > section{ opacity:0; transform:translateY(28px);
+    transition:opacity .6s ease-out, transform .6s cubic-bezier(.2,.7,.2,1); }
+  .site > section.in-view{ opacity:1; transform:none; }
+}

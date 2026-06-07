@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MÃ­dia Kit â€” Giu Miranda</title>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:#ffffff; }
+  html{ scroll-behavior:smooth; }
+  body{ font-family:Arial,Helvetica,system-ui,sans-serif; }
+
+  @font-face{ font-family:'Space Grotesk'; font-weight:700;
+    src:url('_fonts/SpaceGrotesk-Bold.ttf') format('truetype'); font-display:swap; }
+
+  /* header de navegaÃ§Ã£o: aparece ao rolar e leva (suave) a cada seÃ§Ã£o */
+  [id^="sec-"]{ scroll-margin-top:74px; }
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    padding:13px clamp(16px,3vw,34px);
+    background:#3947EF; border-bottom:4px solid #141414;
+    font-family:'Space Grotesk',Arial,Helvetica,sans-serif;
+    transform:translateY(-112%); transition:transform .42s cubic-bezier(.2,.7,.2,1);
+  }
+  .nav.show{ transform:translateY(0); }
+  .nav-brand{ color:#C6FF3D; font-weight:700; letter-spacing:.04em;
+    font-size:clamp(15px,1.6vw,19px); white-space:nowrap; }
+  .nav-links{ display:flex; gap:clamp(14px,2vw,30px); flex-wrap:wrap; justify-content:flex-end; }
+  .nav-links a{ color:#C6FF3D; text-decoration:none; font-weight:700;
+    font-size:clamp(12px,1.1vw,15px); letter-spacing:.06em; text-transform:uppercase;
+    transition:color .15s; }
+  .nav-links a:hover{ color:#fff; }
+
+  /* Cada slide Ã© a imagem original 1920x1080 exibida na largura natural.
+     width:100% + height:auto => proporÃ§Ã£o preservada, sem zoom, corte ou inclinaÃ§Ã£o. */
+  .kit{ width:100%; }
+  .kit img{ display:block; width:100%; height:auto; }
+
+  /* fade suave ao rolar (sÃ³ estÃ©tica; nÃ£o toca nas imagens) */
+  @media (prefers-reduced-motion:no-preference){
+    .kit img{ opacity:0; transform:translateY(24px);
+      transition:opacity .6s ease-out, transform .6s cubic-bezier(.2,.7,.2,1); }
+    .kit img.in-view{ opacity:1; transform:none; }
+  }
+
+  /* ---------- contadores sobrepostos APENAS nos nÃºmeros (slide de mÃ©tricas) ----------
+     A imagem do slide fica intacta. Cada nÃºmero animado Ã© uma camada por cima,
+     com fundo branco igual ao card, cobrindo o nÃºmero "chapado" e contando de 0 ao valor. */
+  .slide{ position:relative; container-type:inline-size; }
+  .num{
+    position:absolute; transform:translate(-50%,-50%);
+    left:calc(var(--l)*1%); top:calc(var(--t)*1%);
+    font-size:calc(var(--fs)*1cqw); min-width:calc(var(--mw)*1cqw);
+    font-weight:700; color:#141414; line-height:1; white-space:nowrap;
+    text-align:center; background:#ffffff;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .num .pct{ color:#E60FA8; }
+  /* sem fundo: usado onde o nÃºmero chapado jÃ¡ foi apagado da imagem */
+  .num.bare{ background:transparent; }
+  /* alinhado Ã  direita: ancorado pela borda direita (nÃºmeros em coluna) */
+  .num.rt{ transform:translate(-100%,-50%); justify-content:flex-end; text-align:right; }
+
+  /* barras horizontais (faixas etÃ¡rias / gÃªnero): trilho cobre a barra do slide,
+     preenchimento cresce de 0 ao valor. */
+  .track{
+    position:absolute; transform:translateY(-50%);
+    left:calc(var(--l)*1%); top:calc(var(--t)*1%);
+    width:calc(var(--w)*1%); height:calc(var(--h)*1cqw);
+    background:var(--bg,#F3F5F7); border-radius:999px; overflow:hidden;
+  }
+  .track > i{ display:block; height:100%; width:0; background:var(--fill,#D300C5);
+    border-radius:999px; transition:width 1.2s cubic-bezier(.2,.7,.2,1); }
+
+  /* barras verticais (grÃ¡fico de crescimento): cobre a barra com o lime do grÃ¡fico
+     e cresce o rosa de baixo pra cima. */
+  .vbar{
+    position:absolute; transform:translateX(-50%);
+    left:calc(var(--l)*1%); bottom:76.48%;
+    width:calc(var(--w)*1%); height:calc(var(--h)*1cqw);
+    background:#CEFF74; display:flex; align-items:flex-end;
+  }
+  .vbar > i{ display:block; width:100%; height:0; background:#F67EDC;
+    transition:height 1.1s cubic-bezier(.2,.7,.2,1); }
+
+  /* indicador de scroll: seta curvada que balanÃ§a e some ao rolar */
+  .scroll-cue{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+    width:64px; height:64px; border-radius:999px;
+    background:#C6FF3D; border:4px solid #141414; box-shadow:5px 5px 0 0 #141414;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:50; transition:opacity .45s ease, transform .45s ease;
+  }
+  .scroll-cue.hide{ opacity:0; transform:translateX(-50%) translateY(24px); pointer-events:none; }
+  .scroll-cue svg{ width:30px; height:38px; display:block; animation:cue-bounce 1.5s ease-in-out infinite; }
+  @keyframes cue-bounce{ 0%,100%{ transform:translateY(-3px); } 50%{ transform:translateY(5px); } }
+  @media (prefers-reduced-motion:reduce){ .scroll-cue svg{ animation:none; } }
+</style>
+</head>
+<body>
+<!-- header de navegaÃ§Ã£o (aparece ao rolar) -->
+<header class="nav" id="nav">
+  <span class="nav-brand">GIU MIRANDA</span>
+  <nav class="nav-links">
+    <a href="#sec-sobre">Sobre</a>
+    <a href="#sec-metricas">MÃ©tricas</a>
+    <a href="#sec-conteudo">ConteÃºdo</a>
+    <a href="#sec-tv">TV</a>
+    <a href="#sec-contato">Contato</a>
+  </nav>
+</header>
+
+<!-- indicador de scroll (seta curvada apontando pra baixo) -->
+<div class="scroll-cue" id="scrollCue" role="button" aria-label="Rolar para baixo">
+  <svg viewBox="0 0 40 50" fill="none" stroke="#3947EF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 5 C 36 14, 34 30, 21 41"/>
+    <path d="M11 31 L21 43 L33 36"/>
+  </svg>
+</div>
+<div class="kit">
+  <img src="slides/01-capa.png?v=9"        alt="Capa â€” Giu Miranda">
+  <img src="slides/02-sobre.png?v=9"        alt="Sobre â€” Oie! Prazer, Giu" id="sec-sobre" loading="lazy">
+
+  <!-- MÃ‰TRICAS: slide original + contadores sobrepostos sÃ³ nos nÃºmeros -->
+  <div class="slide" data-counts id="sec-metricas">
+    <img src="slides/03-metricas.png?v=9"   alt="Minhas mÃ©tricas" loading="lazy">
+    <span class="num bare" style="--l:52.7;--t:17.8;--fs:1.35;--mw:4.6;"><span data-count="637"></span></span>
+    <span class="num bare" style="--l:61.2;--t:17.8;--fs:1.35;--mw:7.4;"><span data-count="62.4" data-decimals="1" data-suffix=" mil"></span></span>
+    <span class="num bare" style="--l:69.6;--t:17.8;--fs:1.35;--mw:5.9;"><span data-count="5197"></span></span>
+    <span class="num bare" style="--l:46.35;--t:86.2;--fs:1.2;--mw:5.6;"><span data-count="94.87" data-decimals="2"></span><span class="pct">%</span></span>
+    <span class="num bare" style="--l:57.7;--t:86.2;--fs:1.2;--mw:5.4;"><span data-count="34.7" data-decimals="1" data-suffix="K"></span></span>
+
+    <!-- grÃ¡fico: Principais faixas etÃ¡rias (4 barras horizontais) -->
+    <div class="track" style="--l:41.25;--t:55.56;--w:6.72;--h:0.72;"><i data-bar="100"></i></div>
+    <div class="track" style="--l:41.25;--t:59.63;--w:6.72;--h:0.72;"><i data-bar="94.4"></i></div>
+    <div class="track" style="--l:41.25;--t:63.61;--w:6.72;--h:0.72;"><i data-bar="17.5"></i></div>
+    <div class="track" style="--l:41.25;--t:67.59;--w:6.72;--h:0.72;"><i data-bar="8"></i></div>
+
+    <!-- grÃ¡fico: GÃªnero (Homens / Mulheres) -->
+    <div class="track" style="--l:79.48;--t:34.91;--w:5.8;--h:0.46;--bg:#F3F5F7;"><i data-bar="100" style="--fill:#D300C5;"></i></div>
+    <div class="track" style="--l:79.48;--t:39.35;--w:5.8;--h:0.46;--bg:#F3F5F7;"><i data-bar="100" style="--fill:#5806E0;"></i></div>
+
+    <!-- grÃ¡fico: barras crescentes (8 barras verticais) -->
+    <span class="vbar" style="--l:81.35;--w:0.83;--h:1.09;"><i></i></span>
+    <span class="vbar" style="--l:82.81;--w:0.83;--h:1.67;"><i></i></span>
+    <span class="vbar" style="--l:84.27;--w:0.83;--h:0.73;"><i></i></span>
+    <span class="vbar" style="--l:85.78;--w:0.83;--h:1.67;"><i></i></span>
+    <span class="vbar" style="--l:87.24;--w:0.83;--h:2.81;"><i></i></span>
+    <span class="vbar" style="--l:88.70;--w:0.83;--h:5.36;"><i></i></span>
+    <span class="vbar" style="--l:90.16;--w:0.83;--h:7.55;"><i></i></span>
+    <span class="vbar" style="--l:91.61;--w:0.83;--h:9.58;"><i></i></span>
+  </div>
+
+  <img src="slides/04-marcas.png?v=7"       alt="Marcas parceiras" loading="lazy">
+  <!-- SEGUIDORES: slide original + contadores e barras sobrepostos -->
+  <div class="slide" data-counts>
+    <img src="slides/05-seguidores.png?v=8"   alt="Um pouco mais sobre meus seguidores" loading="lazy">
+    <!-- insights numÃ©ricos (nÃºmeros/setas chapados apagados; camadas sem fundo, alinhadas Ã  direita) -->
+    <span class="num bare rt" style="--l:41.15;--t:76.67;--fs:1.15;--mw:0;"><span data-count="10.1" data-decimals="1" data-suffix=" mi"></span></span>
+    <span class="num bare rt" style="--l:41.15;--t:81.36;--fs:1.15;--mw:0;"><span data-count="1.5" data-decimals="1" data-suffix=" mi"></span></span>
+    <span class="num bare rt" style="--l:41.15;--t:86.11;--fs:1.15;--mw:0;"><span data-count="4139" data-plain="1"></span></span>
+    <span class="num bare rt" style="--l:41.15;--t:90.86;--fs:1.15;--mw:0;"><span data-count="44" data-plain="1"></span></span>
+    <!-- grÃ¡fico: Por tipo de conteÃºdo (Reels / Stories / Posts) -->
+    <div class="track" style="--l:5.0;--t:55.93;--w:6.41;--h:0.6;"><i data-bar="100"></i></div>
+    <div class="track" style="--l:4.95;--t:61.02;--w:6.20;--h:0.6;"><i data-bar="100"></i></div>
+    <div class="track" style="--l:4.95;--t:66.20;--w:3.75;--h:0.6;"><i data-bar="100"></i></div>
+  </div>
+  <img src="slides/06-conteudos.png?v=2"    alt="Alguns conteÃºdos que jÃ¡ fiz" id="sec-conteudo" loading="lazy">
+  <img src="slides/07-diferenciais.png?v=7" alt="Diferenciais" loading="lazy">
+  <img src="slides/08-cinema.png?v=7"       alt="Eu na TV e no cinema" id="sec-tv" loading="lazy">
+  <img src="slides/11-contato.png?v=21"      alt="Bora criar junt@s?" id="sec-contato" loading="lazy">
+</div>
+
+<script>
+(function(){
+  /* header de navegaÃ§Ã£o: aparece depois de sair da capa */
+  var nav = document.getElementById('nav');
+  if(nav){
+    window.addEventListener('scroll', function(){
+      if(window.scrollY > 120) nav.classList.add('show'); else nav.classList.remove('show');
+    }, { passive:true });
+  }
+
+  /* indicador de scroll: some ao rolar, e leva pra baixo se clicado */
+  var cue = document.getElementById('scrollCue');
+  if(cue){
+    window.addEventListener('scroll', function(){
+      if(window.scrollY > 80) cue.classList.add('hide'); else cue.classList.remove('hide');
+    }, { passive:true });
+    cue.addEventListener('click', function(){
+      window.scrollBy({ top: window.innerHeight * 0.92, behavior:'smooth' });
+    });
+  }
+
+  /* fade-in das imagens ao rolar */
+  var imgs = document.querySelectorAll('.kit img');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
+    }, { threshold:0.08 });
+    imgs.forEach(function(i){ io.observe(i); });
+  } else {
+    imgs.forEach(function(i){ i.classList.add('in-view'); });
+  }
+
+  /* contadores: anima de 0 atÃ© o valor quando o slide entra na tela */
+  function fmt(n, dec, plain){
+    if(plain) return String(Math.round(n));
+    return n.toLocaleString('pt-BR', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+  }
+  function animateCount(el){
+    var target = parseFloat(el.dataset.count);
+    var dec = parseInt(el.dataset.decimals || '0', 10);
+    var suffix = el.dataset.suffix || '';
+    var plain = !!el.dataset.plain;
+    var dur = 1400, start = null;
+    function step(ts){
+      if(start === null) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(target * e, dec, plain) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target, dec, plain) + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+  // mostra o valor final de imediato (evita "0" piscando se nÃ£o houver animaÃ§Ã£o)
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    el.textContent = fmt(parseFloat(el.dataset.count), parseInt(el.dataset.decimals||'0',10), !!el.dataset.plain) + (el.dataset.suffix||'');
+  });
+  var blocks = document.querySelectorAll('[data-counts]');
+  if('IntersectionObserver' in window){
+    var io2 = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.querySelectorAll('[data-count]').forEach(animateCount);
+          // barras horizontais: largura do preenchimento -> valor
+          e.target.querySelectorAll('.track > i').forEach(function(f){ f.style.width = f.dataset.bar + '%'; });
+          // barras verticais: altura -> 100% do seu container
+          e.target.querySelectorAll('.vbar > i').forEach(function(f){ f.style.height = '100%'; });
+          io2.unobserve(e.target);
+        }
+      });
+    }, { threshold:0.35 });
+    blocks.forEach(function(b){ io2.observe(b); });
+  }
+})();
+</script>
+</body>
+</html>
